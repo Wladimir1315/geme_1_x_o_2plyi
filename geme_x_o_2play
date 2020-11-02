@@ -1,0 +1,102 @@
+def izmenenie_matrici(a,k_,h):
+    if k_ == 1:
+        S_t = Matrix_wiwod[h[0]]
+        S_t.pop(h[1])
+        S_t.insert(h[1], 'x')
+        Matrix_wiwod.pop(h[0])
+        Matrix_wiwod.insert(h[0], S_t)
+        return Matrix_wiwod
+    else:
+        S_t = Matrix_wiwod[h[0]]
+        S_t.pop(h[1])
+        S_t.insert(h[1], 'o')
+        Matrix_wiwod.pop(h[0])
+        Matrix_wiwod.insert(h[0], S_t)
+        return Matrix_wiwod
+
+def vvod_proverka():
+    h_str = input('Введите номер строки и столбца через пробел\n')
+    r=[i for i in h_str if i.isdigit()]
+    r = list(map(int, r))
+    f = [1 <= j <= 3 for j in r]
+    folse_ = [i != r for i in B_C]
+    if len(r) == 2 and all(f) and all((folse_)):
+        B_C.append(r)
+        return r
+    print('Введен не коректный ход.\nПример:"1 2"')
+    return vvod_proverka()
+
+def pole_g(a):
+    for i in a:
+        s_j = " | ".join(i)
+        print(s_j)
+        print('--------------')
+
+def uslovie_pobedi(a):
+    v=0
+    S_P1_3x = ['x', 'x', 'x']
+    S_P1_3o = ['o', 'o', 'o']
+    m_px,m_po,m_d1,m_d2,m_sb1,m_sb2,m_sb3 = [],[],[],[],[],[],[]
+    for i in a:
+        m_d1.append(i[v])
+        if v==0:
+            m_d2.append(i[3])
+        else:
+            m_d2.append(i[4-v])
+        m_sb1.append(i[1])
+        m_sb2.append(i[2])
+        m_sb3.append(i[3])
+        fi_=i[1:4]
+        m_px.append(fi_ == S_P1_3x)
+        m_po.append(fi_ == S_P1_3o)
+        v+=1
+
+    m_d1.pop(0)
+    m_d2.pop(0)
+    m_sb1.pop(0)
+    m_sb2.pop(0)
+    m_sb3.pop(0)
+    pd1= m_d1 == S_P1_3x or m_d1 == S_P1_3o
+    pd2= m_d2 == S_P1_3x or m_d2 == S_P1_3o
+    psb1= m_sb1 == S_P1_3x or m_sb1 == S_P1_3o
+    psb2= m_sb2 == S_P1_3x or m_sb2 == S_P1_3o
+    psb3= m_sb3 == S_P1_3x or m_sb3 == S_P1_3o
+    return any([any(m_px),any(m_po),pd1,pd2,psb1,psb2,psb3])
+
+print(''' * * * * * * * * * * * \n Приветствую вас в игре "Крестоки-нолики"\n Первый игрок ставит символ "х" второй игрок ставит символ "о"''')
+print(''' Для совершения хода нужно указать его координаты\n В строке ввода укажите сначало номер строки в которую хотите поставить символ, а затем номер столбца \n Номером может быть целое число от 1 до 3 ''')
+print(' * * * * * * * * * * * \n \n \n ')
+
+while True:
+
+    n = 0
+    k = 0
+    Matrix_wiwod = [[' ', '1', '2', '3'], ['1', '-', '-', '-'], ['2', '-', '-', '-'], ['3', '-', '-', '-']]
+    B_C = [[0, 0]]
+    pole_g(Matrix_wiwod)
+    while True:
+        n += 1
+        for i in [1, 2]:
+            k += 1
+            print('Ход ', n, ' игорок ', i)
+            B = vvod_proverka()
+            izmenenie_matrici(Matrix_wiwod, i, B)
+            pole_g(Matrix_wiwod)
+            if uslovie_pobedi(Matrix_wiwod):
+                print(f'\n * * * * * В Ы И Г Р А Л   И Г Р О К   {i} * * * * *\n')
+                pole_g(Matrix_wiwod)
+                break
+            elif k == 9:
+                print("\n * * * * * Н И Ч Ь Я * * * * * \n")
+                break
+        print(' - - - - - - - - - - - - - - ')
+        if uslovie_pobedi(Matrix_wiwod) or k==9:
+            break
+    print('\n * * * * * * * * * * * * * * * * * * * * * * \n')
+    GE_=input(''' Хотите сыграть ещё раз???\n Для продолжения введите "Y", для выхода нажмите "ENTR"\n ''')
+    if not GE_:
+        print(" \n* * * * * * * * ДО ВСТРЕЧИ В ИГРЕ * * * * * * * *\n\n\n")
+        break
+
+    print("\n")
+    print('* * * * * * * * * * * Н О В А Я   И Г Р А * * * * * * * * * * *  \n')
